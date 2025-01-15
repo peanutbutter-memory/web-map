@@ -74,7 +74,7 @@ def predict_route():
         # Call the predict function with the file to inference
         result = predict(os.path.join(BLOB_DIRECTORY, file_to_inference))
         # Pass the result to the template
-        return result
+        return f"<p>prediction: {result}</p>"
     except Exception as e:
         return f"Could not make a prediction due to the following error: {e}"
 
