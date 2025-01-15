@@ -42,21 +42,23 @@
 
     <div class="flex-container">
         <div id="title">
-            <h1>Image from External Directory</h1>
-            <p>Image url is "{{url_for('serve_file', filename=image_filename)}}"</p>
-            <h2>Download file</h2>
-                <a href="{{ url_for('download_file_from_blob', filename=image_filename) }}" download>
-                <button>Download File</button>
-    </a>
+            <h1>Run Inference</h1>
+            <button onclick="runInference()">Run Inference</button>
         </div>
-
-        <div id="view-image">
-            <img src="{{url_for('serve_file', filename=image_filename)}}" >
-
-        </div>
-
     </div>
 
+    <script>
+    function runInference() {
+        fetch('/predict')
+            .then(response => response.text())
+            .then(data => {
+                alert('Prediction Result: ' + data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    </script>
 
 </body>
 
