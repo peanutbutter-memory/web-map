@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: dockerfile
     volumes:
-          - ${MOUNT_LOCAL_STORAGE}:/blob
+          - datahub-blob:/blob
+          - datahub-fs:/fs
     ports:
-      - "${PORT}:${PORT}"
-      
+      - 80:80

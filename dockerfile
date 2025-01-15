@@ -13,9 +13,8 @@ COPY requirements.txt /app/requirements.txt
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE ${PORT}
+EXPOSE 80
 
 COPY . /app
 
-# Use the CMD environment variable to set the command
-CMD ["sh", "-c", "${RUN_CMD}"]
+CMD ["gunicorn", "-b", "0.0.0.0:80", "app:app"]
