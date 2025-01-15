@@ -7,5 +7,4 @@ services:
           - ${MOUNT_LOCAL_STORAGE}:/blob
     ports:
       - "${PORT}:${PORT}"
-    env_file:
-      - .env
+      
