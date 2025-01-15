@@ -76,7 +76,7 @@ def predict_route():
         # Pass the result to the template
         return result
     except Exception as e:
-        return str(e)
+        return f"Could not make a prediction due to the following error: {e}"
 
 if DEPLOY:
     @app.route("/app/WEB/")
