@@ -1,10 +1,11 @@
 services:
-  web_app:
-    image: ghcr.io/peanutbutter-memory/webmap:latest
-    container_name: web_app
-    restart: always
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile
     volumes:
-      - datahub-blob:/blob
-      - datahub-fs:/fs
+          - ${MOUNT_LOCAL_STORAGE}:/blob
     ports:
-      - "80:80"
+      - "${PORT}:${PORT}"
+    env_file:
+      - .env
