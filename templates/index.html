@@ -49,7 +49,7 @@
 
     <script>
     function runInference() {
-        fetch('/predict')
+        fetch('/app/WEB/predict')
             .then(response => response.text())
             .then(data => {
                 alert('Prediction Result: ' + data);
