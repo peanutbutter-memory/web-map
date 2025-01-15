@@ -68,25 +68,36 @@ def predict(file):
     except Exception as e:
         raise e
 
-@app.route("/predict")
-def predict_route():
-    try:
-        # Call the predict function with the file to inference
-        result = predict(os.path.join(BLOB_DIRECTORY, file_to_inference))
-        # Pass the result to the template
-        return f"<p>prediction: {result}</p>"
-    except Exception as e:
-        return f"Could not make a prediction due to the following error: {e}"
 
 if DEPLOY:
     @app.route("/app/WEB/")
     def index():
         return render_template("index.html")
+    
+    @app.route("/app/WEB/predict")
+    def predict_route():
+        try:
+            # Call the predict function with the file to inference
+            result = predict(os.path.join(BLOB_DIRECTORY, file_to_inference))
+            # Pass the result to the template
+            return f"<p>prediction: {result}</p>"
+        except Exception as e:
+            return f"Could not make a prediction due to the following error: {e}"
 
 else:
     @app.route("/")
     def index():
-        return render_template("index.html") 
+        return render_template("index.html")
+    
+    @app.route("/predict")
+    def predict_route():
+        try:
+            # Call the predict function with the file to inference
+            result = predict(os.path.join(BLOB_DIRECTORY, file_to_inference))
+            # Pass the result to the template
+            return f"<p>prediction: {result}</p>"
+        except Exception as e:
+            return f"Could not make a prediction due to the following error: {e}"
 
     if __name__ == "__main__":
         app.run(debug=True, host="0.0.0.0")
