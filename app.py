@@ -45,7 +45,7 @@ if DEPLOY_STATUS == "Production":
                 external_stylesheets=external_stylesheets)
     
     # TODO: Parameterize this + add to callback to update individual tilemaps for images
-    tilemap_path = app.get_asset_url("sites/west-coast-high-resolution/burrand_inlet/tiles/{z}/{x}/{y}.png")
+    tilemap_path = "/blob/assets/sites/west-coast-high-resolution/burrand_inlet/tiles/{z}/{x}/{y}.png" #app.get_asset_url("sites/west-coast-high-resolution/burrand_inlet/tiles/{z}/{x}/{y}.png")
     print(f"Tilemap being used is {tilemap_path}")
 
     high_resolution_metadata = "/blob/assets/sites/west-coast-high-resolution/sites.geojson"
