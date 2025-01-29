@@ -1,6 +1,6 @@
 services:
   web_app:
-    image: ghcr.io/peanutbutter-memory/webmap:latest
+    image: ghcr.io/peanutbutter-memory/web-map:latest
     container_name: web_app
     restart: always
     volumes:
