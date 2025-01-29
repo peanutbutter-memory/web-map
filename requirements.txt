@@ -1,0 +1,7 @@
+dash
+pandas
+dash-bootstrap-components
+geopandas
+lxml
+dash-leaflet
+dash-extensions

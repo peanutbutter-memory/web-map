@@ -1,0 +1,10 @@
+services:
+  web_app:
+    image: ghcr.io/peanutbutter-memory/webmap:latest
+    container_name: web_app
+    restart: always
+    volumes:
+      - datahub-blob:/blob
+      - datahub-fs:/fs
+    ports:
+      - "80:80"
