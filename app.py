@@ -19,6 +19,7 @@
 import os
 import sys
 from datetime import date
+
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, State, no_update
 import plotly.express as px
 import dash_bootstrap_components as dbc
@@ -29,6 +30,7 @@ import dash_leaflet as dl
 import json
 from dash_extensions.javascript import arrow_function
 
+from flask import Flask, render_template, send_from_directory
 
 CONTACT_EMAIL = os.environ["CONTACT_EMAIL"]
 DEPLOY_STATUS = os.environ["DEPLOY_STATUS"]
@@ -38,29 +40,48 @@ DEBUG_STATUS = os.environ["DEBUG_STATUS"]
 
 external_stylesheets = [dbc.themes.CERULEAN, dbc.icons.BOOTSTRAP]
 
+server = Flask(__name__)
+
 if DEPLOY_STATUS == "Production":
     app = Dash(__name__,
                 requests_pathname_prefix="/app/WEB/",
                 routes_pathname_prefix="/app/WEB/",
-                external_stylesheets=external_stylesheets)
+                external_stylesheets=external_stylesheets,
+                server=server)
     
-    # TODO: Parameterize this + add to callback to update individual tilemaps for images
-    tilemap_path = "/app/WEB/datahub-blob/assets/sites/west-coast-high-resolution/burrand_inlet/tiles/{z}/{x}/{y}.png" #app.get_asset_url("sites/west-coast-high-resolution/burrand_inlet/tiles/{z}/{x}/{y}.png")
-    print(f"Tilemap being used is {tilemap_path}")
-
+    BLOB_DIRECTORY = "/blob/assets/sites/west-coast-high-resolution"
+    
     high_resolution_metadata = "/blob/assets/sites/west-coast-high-resolution/sites.geojson"
     print(f"High resolution metadata being used is {high_resolution_metadata}")
+    
+    @server.route("/app/WEB/maptiles/<path:location>/<z>/<x>/<y>.png")
+    def serve_tiles(location, z, x, y):
+        """Serve tilemaps for dash_leaflet map component
+        """
+
+        url = f"{location}/tiles/{z}/{x}/{y}.png"
+        print(f"URL is {url}")
+
+        return send_from_directory(BLOB_DIRECTORY, url)  
 
 elif DEPLOY_STATUS == "Development":
     print("Running in development mode")
-    app = Dash(__name__, external_stylesheets=external_stylesheets)
+    app = Dash(__name__, external_stylesheets=external_stylesheets, server=server)
 
-    # TODO: Parameterize this + add to callback to update individual tilemaps for images
-    tilemap_path = "./assets/sites/west-coast-high-resolution/burrand_inlet/tiles/{z}/{x}/{y}.png"
-    print(f"Tilemap being used is {tilemap_path}")
+    BLOB_DIRECTORY = "assets/sites/west-coast-high-resolution"
 
     high_resolution_metadata = "./assets/sites/west-coast-high-resolution/sites.geojson"
     print(f"High resolution metadata being used is {high_resolution_metadata}")
+
+    @server.route("/maptiles/<path:location>/<z>/<x>/<y>.png")
+    def serve_tiles(location, z, x, y):
+        """Serve tilemaps for dash_leaflet map component
+        """
+
+        url = f"{location}/tiles/{z}/{x}/{y}.png"
+        print(f"URL is {url}")
+
+        return send_from_directory(BLOB_DIRECTORY, url)    
 
 else:
     raise ValueError("Invalid value for DEPLOY_STATUS. Must be either 'Production' or 'Development'")
@@ -181,7 +202,7 @@ map_page = dbc.Container([
                        # Base map
                        dl.TileLayer(id="map-tile-layer"),
                        # High resolution tilemaps
-                       dl.TileLayer(id="tilemap-layer", url=tilemap_path),
+                       dl.TileLayer(id="tilemap-layer", url="/maptiles/burrand_inlet/{z}/{x}/{y}.png"),
                              dl.EasyButton(icon="bi bi-house", id="reset-map-location-zoom", title="Reset map location and zoom"),
                             dl.GeoJSON(data=geojson_bboxes, id="imagery-bbox-polygons",
                                        zoomToBounds=True,
