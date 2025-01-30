@@ -202,7 +202,7 @@ map_page = dbc.Container([
                        # Base map
                        dl.TileLayer(id="map-tile-layer"),
                        # High resolution tilemaps
-                       dl.TileLayer(id="tilemap-layer", url="/maptiles/burrand_inlet/{z}/{x}/{y}.png"),
+                       dl.TileLayer(id="tilemap-layer", url="/app/WEB//maptiles/burrand_inlet/{z}/{x}/{y}.png"),
                              dl.EasyButton(icon="bi bi-house", id="reset-map-location-zoom", title="Reset map location and zoom"),
                             dl.GeoJSON(data=geojson_bboxes, id="imagery-bbox-polygons",
                                        zoomToBounds=True,
