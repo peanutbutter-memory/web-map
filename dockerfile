@@ -1,7 +1,7 @@
 FROM python:3.11-slim-bookworm
 
 # rasterio requires libexpat1
-RUN apt-get update && apt-get install -y libexpat1
+RUN apt-get update && apt-get install -y libexpat1 && apt-get install -y libgl1
 
 # Set the working directory in the container
 RUN mkdir app
