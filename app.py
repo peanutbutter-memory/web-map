@@ -32,9 +32,6 @@ ML_MODEL_PATH = os.environ["ML_MODEL_PATH"]
 CHANGE_DETECTION_SCRIPT = os.environ["CHANGE_DETECTION_SCRIPT"]
 ML_RESULTS_PATH = os.environ["ML_RESULTS_PATH"]
 
-# Diskcache for long callbacks
-cache = diskcache.Cache("./cache")
-long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 external_stylesheets = [dbc.themes.CERULEAN, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME]
 
@@ -48,6 +45,10 @@ app = Dash(__name__,
             server=server)
 
 ASSETS_DIRECTORY = "/blob"
+
+# Diskcache for long callbacks
+cache = diskcache.Cache("/blob/cache")
+long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 sites_metadata = "/blob/assets/sites/sites.geojson"
 print(f"Site metadata being used is {sites_metadata}")

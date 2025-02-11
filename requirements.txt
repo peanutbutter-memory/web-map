@@ -13,3 +13,4 @@ tqdm
 onnx
 rasterio
 shapely
+diskcache
