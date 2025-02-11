@@ -7,7 +7,7 @@ dash-leaflet
 dash-extensions
 torch
 torchvision
-opencv-python
+opencv-contrib-python-headless
 albumentations
 tqdm
 onnx
