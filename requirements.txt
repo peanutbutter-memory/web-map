@@ -16,3 +16,4 @@ shapely
 diskcache
 psutil
 multiprocess
+matplotlib
