@@ -5,3 +5,11 @@ geopandas
 lxml
 dash-leaflet
 dash-extensions
+torch
+torchvision
+opencv-python
+albumentations
+tqdm
+onnx
+rasterio
+shapely
