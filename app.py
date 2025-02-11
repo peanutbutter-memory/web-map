@@ -539,7 +539,8 @@ def start_ml_algorithm(run, selected_algorithm, selected_location, start_date_uu
             change_detection_script_path = os.path.join(ASSETS_DIRECTORY, CHANGE_DETECTION_SCRIPT)
             print(f"change_detection_path script: {change_detection_script_path}")
 
-            run = subprocess.run(["python", change_detection_script_path, before_image_path, after_image_path, ml_model_path, ml_results_path, "--verbose"], capture_output=True)
+            run = subprocess.run(["python", change_detection_script_path, before_image_path, after_image_path, ml_model_path, ml_results_path, "--verbose"], capture_output=True,
+                                 text=True)
 
             if run.returncode == 0:
                 # TODO: Show as banner on UI
@@ -548,7 +549,8 @@ def start_ml_algorithm(run, selected_algorithm, selected_location, start_date_uu
             elif run.returncode >= 1:
                 # TODO: Show as banner on UI
                 print("ML algorithm failed")
-                return no_update, f"ML algorithm failed to run for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}."
+                print(f"Error: {run.stderr}")
+                return no_update, f"ML algorithm failed to run for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}. Error: {run.stderr}"
     
     else:
         # TODO: Implement detection
