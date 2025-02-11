@@ -65,21 +65,23 @@ def serve_tiles(location, z, x, y):
 
     return send_from_directory(ASSETS_DIRECTORY, url)
 
-@server.route("/app/WEB/ml_results/<path:filename>")
+@server.route("/app/WEB/ml_results/<path:filename>.geojson")
 def serve_ml_results(filename):
     """Serve ML results for dash_leaflet map component
     """
 
-    url = f"{ML_RESULTS_DIRECTORY}/{filename}"
+    url = f"{filename}"
     
-    if DEBUG_STATUS: print(f"ML results requested: {url}")
+    if DEBUG_STATUS: print(f"ML geojson results requested to show on map: {url}")
 
     return send_from_directory(ML_RESULTS_DIRECTORY, url)
 
 @server.route("/app/WEB/assets/<path:filename>.css")
 def serve_css(filename):
     """Serve CSS files from the assets directory"""
+    
     if DEBUG_STATUS: print(f"CSS file requested: {filename}")
+    
     return send_from_directory("assets", filename)
 
 imagery_metadata = gpd.read_file(sites_metadata)
@@ -341,7 +343,7 @@ data_page = dbc.Container([
 # =====
 app.layout = html.Div([
     html.Link(rel="stylesheet",
-              href="/app/WEB/assets/style"),
+              href="/app/WEB/assets/style.css"),
     dcc.Location(id='url', refresh=False),
     sidebar_page,
     html.Div(id='page-content')
@@ -549,10 +551,10 @@ def start_ml_algorithm(run, selected_algorithm, selected_location, start_date_uu
             
             # FIXME: Prepend date ran to filename. Should a uuid be added? 
             # QUESTION: Should metadata be injected into geojson file etc. dated used, location, algotithm etc.
-            ml_results_filename = f"{selected_algorithm}_{selected_location}_{start_date_uuid}_{end_date_uuid}.geojson"
+            ml_results_filename = f"{selected_algorithm}_{selected_location}_{start_date_uuid}_{end_date_uuid}"
             
-            ml_results_path = os.path.join(ML_RESULTS_DIRECTORY, ml_results_filename)
-            print(f"ml_output_path: {ml_results_path}")
+            ml_results_path = os.path.join(ML_RESULTS_DIRECTORY, ml_results_filename + ".geojson")
+            print(f"ml_output_path: {ml_results_path}.geojson")
 
             change_detection_script_path = os.path.join(ASSETS_DIRECTORY, CHANGE_DETECTION_SCRIPT)
             print(f"change_detection_path script: {change_detection_script_path}")
@@ -565,7 +567,7 @@ def start_ml_algorithm(run, selected_algorithm, selected_location, start_date_uu
                 print("ML algorithm completed successfully")
                 
                 # Return the path to the generated ML results
-                display_ml_results_url = f"/app/WEB/ml_results/{ml_results_filename}"
+                display_ml_results_url = f"/app/WEB/ml_results/{ml_results_filename}.geojson"
 
                 return display_ml_results_url, f"ML algorithm completed for {selected_algorithm} for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}. Loading output file {display_ml_results_url}"
             
