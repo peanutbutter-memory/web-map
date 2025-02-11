@@ -47,6 +47,7 @@ app = Dash(__name__,
 ASSETS_DIRECTORY = "/blob"
 
 # Diskcache for long callbacks
+# Mount on r+w filesystem
 cache = diskcache.Cache("/fs/cache")
 long_callback_manager = DiskcacheLongCallbackManager(cache)
 
@@ -58,7 +59,7 @@ def serve_tiles(location, z, x, y):
     """Serve tilemaps for dash_leaflet map component
     """
 
-    url = f"{location}/tiles/{z}/{x}/{y}.png"
+    url = f"{location}/{z}/{x}/{y}.png"
 
     return send_from_directory(ASSETS_DIRECTORY, url)
 
