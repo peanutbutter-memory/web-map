@@ -14,3 +14,5 @@ onnx
 rasterio
 shapely
 diskcache
+psutil
+multiprocess
