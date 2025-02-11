@@ -30,7 +30,6 @@ PORT = os.environ["PORT"]
 DEBUG_STATUS = os.environ["DEBUG_STATUS"]
 ML_MODEL_PATH = os.environ["ML_MODEL_PATH"]
 CHANGE_DETECTION_SCRIPT = os.environ["CHANGE_DETECTION_SCRIPT"]
-ML_RESULTS_PATH = os.environ["ML_RESULTS_PATH"]
 
 
 external_stylesheets = [dbc.themes.CERULEAN, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME]
@@ -45,6 +44,7 @@ app = Dash(__name__,
             server=server)
 
 ASSETS_DIRECTORY = "/blob/assets"
+ML_RESULTS_DIRECTORY = "/fs/ml_results"
 
 # Diskcache for long callbacks
 # Mount on r+w filesystem
@@ -532,20 +532,20 @@ def start_ml_algorithm(run, selected_algorithm, selected_location, start_date_uu
             # FIXME: Prepend date ran to filename. Should a uuid be added? 
             # QUESTION: Should metadata be injected into geojson file etc. dated used, location, algotithm etc.
             ml_results_filename = f"{selected_algorithm}_{selected_location}_{start_date_uuid}_{end_date_uuid}.geojson"
-            ml_output_path = os.path.join(ASSETS_DIRECTORY, ml_results_filename)
-            print(f"ml_output_path: {ml_output_path}")
+            
+            ml_results_path = os.path.join(ML_RESULTS_DIRECTORY, ml_results_filename)
+            print(f"ml_output_path: {ml_results_path}")
 
-            change_detection_path = os.path.join(ASSETS_DIRECTORY, CHANGE_DETECTION_SCRIPT)
-            print(f"change_detection_path: {change_detection_path}")
+            change_detection_script_path = os.path.join(ASSETS_DIRECTORY, CHANGE_DETECTION_SCRIPT)
+            print(f"change_detection_path script: {change_detection_script_path}")
 
-
-            run = subprocess.run(["python", change_detection_path, before_image_path, after_image_path, ml_model_path, ml_output_path, "--verbose"], capture_output=True)
+            run = subprocess.run(["python", change_detection_script_path, before_image_path, after_image_path, ml_model_path, ml_results_path, "--verbose"], capture_output=True)
 
             if run.returncode == 0:
                 # TODO: Show as banner on UI
                 print("ML algorithm completed successfully")
-                return ml_output_path, f"Running {selected_algorithm} for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}."
-            else:
+                return ml_results_path, f"Running {selected_algorithm} for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}."
+            elif run.returncode >= 1:
                 # TODO: Show as banner on UI
                 print("ML algorithm failed")
                 return no_update, f"ML algorithm failed to run for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}."
