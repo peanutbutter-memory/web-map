@@ -47,7 +47,7 @@ app = Dash(__name__,
 ASSETS_DIRECTORY = "/blob"
 
 # Diskcache for long callbacks
-cache = diskcache.Cache("/blob/assets/cache")
+cache = diskcache.Cache("/fs/cache")
 long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 sites_metadata = "/blob/assets/sites/sites.geojson"
