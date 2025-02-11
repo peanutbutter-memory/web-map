@@ -44,7 +44,7 @@ app = Dash(__name__,
             external_stylesheets=external_stylesheets,
             server=server)
 
-ASSETS_DIRECTORY = "/blob"
+ASSETS_DIRECTORY = "/blob/assets"
 
 # Diskcache for long callbacks
 # Mount on r+w filesystem
@@ -60,6 +60,8 @@ def serve_tiles(location, z, x, y):
     """
 
     url = f"{location}/{z}/{x}/{y}.png"
+    
+    if DEBUG_STATUS: print(f"Tilemap requested: {url}")
 
     return send_from_directory(ASSETS_DIRECTORY, url)
 
