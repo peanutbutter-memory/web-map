@@ -65,12 +65,12 @@ def serve_tiles(location, z, x, y):
 
     return send_from_directory(ASSETS_DIRECTORY, url)
 
-@server.route("/app/WEB/ml_results/<path:filename>.geojson")
+@server.route("/app/WEB/ml_results/<path:filename>")
 def serve_ml_results(filename):
     """Serve ML results for dash_leaflet map component
     """
 
-    url = f"{ML_RESULTS_DIRECTORY}/{filename}.geojson"
+    url = f"{ML_RESULTS_DIRECTORY}/{filename}"
     
     if DEBUG_STATUS: print(f"ML results requested: {url}")
 
@@ -341,7 +341,7 @@ data_page = dbc.Container([
 # =====
 app.layout = html.Div([
     html.Link(rel="stylesheet",
-              href="/app/WEB/assets/style.css"),
+              href="/app/WEB/assets/style"),
     dcc.Location(id='url', refresh=False),
     sidebar_page,
     html.Div(id='page-content')
@@ -567,7 +567,7 @@ def start_ml_algorithm(run, selected_algorithm, selected_location, start_date_uu
                 # Return the path to the generated ML results
                 display_ml_results_url = f"/app/WEB/ml_results/{ml_results_filename}"
 
-                return display_ml_results_url, f"ML algorithm completed for {selected_algorithm} for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}."
+                return display_ml_results_url, f"ML algorithm completed for {selected_algorithm} for location {selected_location}," f"from {start_date_uuid} to {end_date_uuid}. Loading output file {display_ml_results_url}"
             
             elif run.returncode >= 1:
                 # TODO: Show as banner on UI
